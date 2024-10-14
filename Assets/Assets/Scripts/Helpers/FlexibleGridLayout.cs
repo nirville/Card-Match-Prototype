@@ -3,102 +3,67 @@ using UnityEngine.UI;
 
 public class FlexibleGridLayout : LayoutGroup
 {    
-    public enum FitType
-    {
-        UNIFORM,
-        WIDTH,
-        HEIGHT,
-        FIXEDROWS,
-        FIXEDCOLUMNS
-    }
+   public int rows;
+	public int columns;
+	public Vector2 cellSize;
+	public Vector2 spacing;
+	public int preferredPadding;
 
-    [Header("Flexible Grid")]
-    public FitType fitType = FitType.UNIFORM;
+	public override void CalculateLayoutInputHorizontal()
+	{
+		base.CalculateLayoutInputHorizontal();
+		if (rows == 0 || columns == 0)
+		{
+			rows = 2;
+			columns = 2;
+		}
 
-    public int rows;
-    public int columns;
-    public Vector2 cellSize;
-    public Vector2 spacing;
+		float parentWidth = rectTransform.rect.width;
+		float parentHeight = rectTransform.rect.height;
 
-    public bool fitX;
-    public bool fitY;
+		float cellHeight = (parentHeight - 2 * preferredPadding - (rows - 1) * spacing.y) / rows;
+		float cellWidth = cellHeight;
 
-    public override void CalculateLayoutInputHorizontal()
-    {
-        base.CalculateLayoutInputHorizontal();
+		cellSize.x = cellWidth;
+		cellSize.y = cellHeight;
 
-        if (fitType == FitType.WIDTH || fitType == FitType.HEIGHT || fitType == FitType.UNIFORM)
-        {
-            float squareRoot = Mathf.Sqrt(transform.childCount);
-            rows = columns = Mathf.CeilToInt(squareRoot);
-            switch (fitType)
-            {
-                case FitType.WIDTH:
-                    fitX = true;
-                    fitY = false;
-                    break;
-                case FitType.HEIGHT:
-                    fitX = false;
-                    fitY = true;
-                    break;
-                case FitType.UNIFORM:
-                    fitX = fitY = true;
-                    break;
-            }
-        }
+		padding.left = Mathf.FloorToInt((parentWidth - columns * cellHeight) / 2);
+		padding.top = Mathf.FloorToInt((parentHeight - rows * cellWidth) / 2);
+		padding.bottom = padding.top;
 
-        if (fitType == FitType.WIDTH || fitType == FitType.FIXEDCOLUMNS)
-        {
-            rows = Mathf.CeilToInt(transform.childCount / (float)columns);
-        }
-        if (fitType == FitType.HEIGHT || fitType == FitType.FIXEDROWS)
-        {
-            columns = Mathf.CeilToInt(transform.childCount / (float)rows);
-        }
-        
+		int columnCount = 0;
+		int rowCount = 0;
 
-        float parentWidth = rectTransform.rect.width;
-        float parentHeight = rectTransform.rect.height;
+		for (int i = 0; i < rectChildren.Count; i++)
+		{
+			rowCount = i / columns;
+			columnCount = i % columns;
 
-        float cellWidth = parentWidth / (float)columns - ((spacing.x / (float)columns) * (columns - 1))
-            - (padding.left / (float)columns) - (padding.right / (float)columns);
-        float cellHeight = parentHeight / (float)rows - ((spacing.y / (float)rows) * (rows - 1))
-            - (padding.top / (float)rows) - (padding.bottom / (float)rows); ;
+			var item = rectChildren[i];
 
-        cellSize.x = fitX ? cellWidth : cellSize.x;
-        cellSize.y = fitY ? cellHeight : cellSize.y;
+			var xPos = padding.left + (cellSize.x * columnCount) + (spacing.x * (columnCount - 1));
+			var yPos = padding.top + (cellSize.y * rowCount) + (spacing.y * (rowCount - 1));
 
-        int columnCount = 0;
-        int rowCount = 0;
+			SetChildAlongAxis(item, 0, xPos, cellSize.x);
+			SetChildAlongAxis(item, 1, yPos, cellSize.y);
+		}
+		
+	}
 
-        for (int i = 0; i < rectChildren.Count; i++)
-        {
-            rowCount = i / columns;
-            columnCount = i % columns;
+	public RectTransform GetRectTransform()
+	{
+		return rectTransform;
+	}
 
-            var item = rectChildren[i];
+	public override void CalculateLayoutInputVertical()
+	{
+	}
 
-            var xPos = (cellSize.x * columnCount) + (spacing.x * columnCount) + padding.left;
-            var yPos = (cellSize.y * rowCount) + (spacing.y * rowCount) + padding.top;
+	public override void SetLayoutHorizontal()
+	{
+	}
 
-            SetChildAlongAxis(item, 0, xPos, cellSize.x);
-            SetChildAlongAxis(item, 1, yPos, cellSize.y);
-
-        }
-    }
-
-    public override void CalculateLayoutInputVertical()
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public override void SetLayoutHorizontal()
-    {
-        //throw new System.NotImplementedException();
-    }
-
-    public override void SetLayoutVertical()
-    {
-        //throw new System.NotImplementedException();
-    }
+	public override void SetLayoutVertical()
+	{
+	}    
 }
