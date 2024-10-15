@@ -6,7 +6,8 @@ namespace Nirville.Core
     {
         internal static GameManager Instance {get; private set;}
 
-        public string LastContentSelected { get; set; }
+        public string LastContentRevealed { get; set; }
+        public string LastClickedCardID {get; set;}
 
         public Vector2Int BoardGridSize { get; set;}
 
@@ -22,6 +23,11 @@ namespace Nirville.Core
             {
                 Instance = this;
             }
+        }
+
+        internal bool IsSelectionMatchedFound(string newCard)
+        {
+            return (LastContentRevealed == newCard);
         }
 
         public void Logger(string msg)

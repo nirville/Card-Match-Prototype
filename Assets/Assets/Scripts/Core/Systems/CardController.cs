@@ -12,6 +12,8 @@ namespace Nirville.Core
         Card _card;
         Button _button;
 
+        GameManager _game;
+
         float cardScale = 1.0f;
         float flipSpeed = 2.0f;
         float flipTolerance = 0.05f;
@@ -26,6 +28,7 @@ namespace Nirville.Core
 
         private void Start()
         {
+            _game = GameManager.Instance;
             _button.onClick.AddListener(() => OnCardInteraction());
         }
 
@@ -51,10 +54,10 @@ namespace Nirville.Core
             ChangeScale(-1.0f);
             _isFlipped = true;
 
-            //reset if not matched
-            GameManager.Instance.LastContentSelected = _card.contentID;
-            GameManager.Instance.Logger(GameManager.Instance.LastContentSelected);
-
+            _button.enabled = false;
+            _game.LastClickedCardID = transform.name;
+            _game.IsSelectionMatchedFound(_card.contentID);
+            _game.LastContentRevealed = _card.contentID;
         }
 
         public void ChangeScale(float newScale)
@@ -65,7 +68,6 @@ namespace Nirville.Core
         void DisableCard()
         {
             _button.enabled = false;
-            GetComponent<Image>().enabled = false;
             backFace.gameObject.SetActive(false);
             frontFace.gameObject.SetActive(false);
         }

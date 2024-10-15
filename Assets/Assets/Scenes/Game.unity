@@ -221,13 +221,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 255
+    m_Left: 15
     m_Right: 0
     m_Top: 10
     m_Bottom: 10
   m_ChildAlignment: 4
   rows: 2
-  columns: 2
+  columns: 3
   cellSize: {x: 480, y: 480}
   spacing: {x: 20, y: 20}
   preferredPadding: 0
