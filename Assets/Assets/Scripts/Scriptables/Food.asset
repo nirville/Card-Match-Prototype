@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 885e731f4f915468fa075c996156f893, type: 3}
+  m_Name: Food
+  m_EditorClassIdentifier: 
+  cards:
+  - {fileID: 11400000, guid: 27c5d7aed0f0943f093210750a5adcad, type: 2}
+  - {fileID: 11400000, guid: 99ff88bbb5fb74bf39e1924fc49f83ac, type: 2}
+  - {fileID: 11400000, guid: b5dbd59c8aa2f49e48af9638457d37a3, type: 2}
+  - {fileID: 11400000, guid: 672e457540984447485ab8b365daac6f, type: 2}
+  - {fileID: 11400000, guid: 5215b45ad43ac41589a2a97b9b5b2859, type: 2}

@@ -9,8 +9,7 @@ namespace Nirville.Core
     {
         [SerializeField] Image frontFace;
         [SerializeField] Image backFace;
-        [SerializeField] Card card; //auto populate
-
+        Card _card;
         Button _button;
 
         float cardScale = 1.0f;
@@ -53,8 +52,7 @@ namespace Nirville.Core
             _isFlipped = true;
 
             //reset if not matched
-
-            GameManager.Instance.LastContentSelected = card.contentID;
+            GameManager.Instance.LastContentSelected = _card.contentID;
             GameManager.Instance.Logger(GameManager.Instance.LastContentSelected);
 
         }
@@ -70,6 +68,12 @@ namespace Nirville.Core
             GetComponent<Image>().enabled = false;
             backFace.gameObject.SetActive(false);
             frontFace.gameObject.SetActive(false);
+        }
+
+        internal void SetCard(Card card)
+        {
+            _card = card;
+            backFace.sprite = _card.contentIMG;
         }
     }
 }

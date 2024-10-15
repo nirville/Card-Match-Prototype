@@ -8,6 +8,8 @@ namespace Nirville.Core
 
         public string LastContentSelected { get; set; }
 
+        public Vector2Int BoardGridSize { get; set;}
+
         public bool isLogMessages;
 
         private void Awake() 
