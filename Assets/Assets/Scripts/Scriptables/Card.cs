@@ -4,7 +4,11 @@ using UnityEngine;
 public class Card : ScriptableObject
 {
     public string contentID;
-    public int height;
-    public int width;
     public Sprite contentIMG;
+
+    public bool IsMatch(string val)
+    {
+        val = val.ToLower();
+        return (val == contentID);
+    }
 }
