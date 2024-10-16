@@ -15,7 +15,7 @@ namespace Nirville.Core
         GameManager _game;
 
         float cardScale = 1.0f;
-        float flipSpeed = 2.0f;
+        float flipSpeed = 4.0f;
         float flipTolerance = 0.05f;
 
         bool _isFlipped;
@@ -40,6 +40,9 @@ namespace Nirville.Core
 
         IEnumerator FlipRoutine()
         {
+            _button.enabled = false;
+            _isFlipped = true;
+
             while (transform.localScale.x > -1f)
             {
                 cardScale = cardScale - (flipSpeed * Time.deltaTime);
@@ -52,12 +55,26 @@ namespace Nirville.Core
                 yield return null;
             }
             ChangeScale(-1.0f);
-            _isFlipped = true;
+            _game.SetSelectedCard(this.gameObject);
+        }
 
-            _button.enabled = false;
-            _game.LastClickedCardID = transform.name;
-            _game.IsSelectionMatchedFound(_card.contentID);
-            _game.LastContentRevealed = _card.contentID;
+        IEnumerator ResetCardRoutine()
+        {
+            _isFlipped = false;
+            _button.enabled = true;
+
+            while (transform.localScale.x < 1f)
+            {
+                cardScale = cardScale + (flipSpeed * Time.deltaTime);
+                ChangeScale(cardScale);
+                if (flipTolerance > cardScale)
+                {
+                    backFace.gameObject.SetActive(false);
+                    frontFace.gameObject.SetActive(true);
+                }
+                yield return null;             
+            }
+            ChangeScale(1.0f);
         }
 
         public void ChangeScale(float newScale)
@@ -65,7 +82,7 @@ namespace Nirville.Core
             transform.localScale = new Vector3(newScale, 1, 1);
         }
 
-        void DisableCard()
+        internal void DisableCard()
         {
             _button.enabled = false;
             backFace.gameObject.SetActive(false);
@@ -77,5 +94,8 @@ namespace Nirville.Core
             _card = card;
             backFace.sprite = _card.contentIMG;
         }
+
+        internal Card GetCard() => _card;
+        internal void ResetCard() => StartCoroutine(ResetCardRoutine());
     }
 }
