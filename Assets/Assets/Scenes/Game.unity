@@ -2914,6 +2914,7 @@ MonoBehaviour:
   quitBtn: {fileID: 1000452515}
   score: {fileID: 1281141466}
   moves: {fileID: 1487139951}
+  play: {fileID: 1993603481}
   _2x2: {fileID: 247880005}
   _2x3: {fileID: 218022355}
   _4x4: {fileID: 269105044}
