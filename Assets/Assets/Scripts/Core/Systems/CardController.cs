@@ -20,6 +20,7 @@ namespace Nirville.Core
 
         bool _isFlipped;
 
+        public bool IsMatched {set; get;}
 
         private void Awake()
         {
@@ -121,6 +122,7 @@ namespace Nirville.Core
             _button.enabled = false;
             backFace.gameObject.SetActive(false);
             frontFace.gameObject.SetActive(false);
+            IsMatched = true;
         }
 
         internal void SetCard(Card card)

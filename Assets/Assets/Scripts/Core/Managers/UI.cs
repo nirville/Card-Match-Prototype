@@ -45,21 +45,24 @@ public class UI : MonoBehaviour
         {
             SwitchToCanvas(boardCanvas);
             GameEvents.current.StartGameplay();
-        }
-       );
+        });
+
         quitBtn.onClick.AddListener(() =>
         {
             SwitchToCanvas(menuCanvas);
             GameEvents.current.EndGameplay();
-        }
-       );
+        });
 
        nextBtn.interactable = false;
         nextBtn.onClick.AddListener(() =>
         {
             GameEvents.current.StartNextLevel();
-        }
-       );
+        });
+
+       saveBtn.onClick.AddListener(()=>
+       {
+            GameEvents.current.SaveBoard();
+       });
     }
 
     void SwitchToCanvas(Canvas canvas)

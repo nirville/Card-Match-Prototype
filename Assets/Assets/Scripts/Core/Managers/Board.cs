@@ -25,6 +25,7 @@ namespace Nirville.Core
             GameEvents.current.GameStart += OnGameStart;
             GameEvents.current.GameEnd += OnGameEnd;
             GameEvents.current.NextLevel += OnNextLevel;
+            GameEvents.current.SaveGame += SaveCurrentBoard;
         }
 
         void OnDisable()
@@ -33,9 +34,11 @@ namespace Nirville.Core
             GameEvents.current.GameStart -= OnGameStart;
             GameEvents.current.GameEnd -= OnGameEnd;
             GameEvents.current.NextLevel -= OnNextLevel;
+            GameEvents.current.SaveGame -= SaveCurrentBoard;
         }
 
-        private void Awake() {
+        private void SaveCurrentBoard() {
+            PlayerDataManager.Instance.SaveToJson(_cardControllers.ToArray());
         }
 
         private void Start() {
