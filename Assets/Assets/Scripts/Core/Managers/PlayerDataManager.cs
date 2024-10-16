@@ -56,6 +56,8 @@ public class PlayerDataManager : MonoBehaviour
         BoardData bd = new BoardData();
         bd.cardIDs = new string[cardsC.Length];
         bd.resolvedIndices = new int[cardsC.Length];
+        bd.score = GameManager.Instance.score;
+        bd.moves = GameManager.Instance.movesCount;
         
         for(int i = 0; i < cardsC.Length; i++)
         {
