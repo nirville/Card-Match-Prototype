@@ -31,7 +31,9 @@ namespace Nirville.Core
         {
             _game = GameManager.Instance;
             _button.onClick.AddListener(() => OnCardInteraction());
-            StartCoroutine(FullFlip());
+
+            if(!IsMatched)
+                StartCoroutine(FullFlip());
         }
 
         private IEnumerator FullFlip()
@@ -123,6 +125,7 @@ namespace Nirville.Core
             backFace.gameObject.SetActive(false);
             frontFace.gameObject.SetActive(false);
             IsMatched = true;
+                Debug.Log(this.gameObject);
         }
 
         internal void SetCard(Card card)

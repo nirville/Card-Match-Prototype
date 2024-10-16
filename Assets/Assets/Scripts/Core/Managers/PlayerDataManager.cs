@@ -4,6 +4,8 @@ using Nirville.Core;
 using UnityEngine.Purchasing.MiniJSON;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System;
+using System.IO;
 
 public class PlayerDataManager : MonoBehaviour
 {
@@ -23,30 +25,35 @@ public class PlayerDataManager : MonoBehaviour
         }
     }
 
-    [ContextMenu("Load")]
-    internal Dictionary<string, bool> LoadJsonData()
+    internal Tuple<List<string>, List<int>> LoadJsonData()
     {
         BoardData bd = new BoardData();
 
         string filePath = Application.persistentDataPath + "/playerdata.json";
-        var boardData = System.IO.File.ReadAllText(filePath);
-        bd = JsonUtility.FromJson<BoardData>(boardData);
-        Debug.Log(bd);
-
-        Dictionary<string, bool> cds = new Dictionary<string, bool>();
-        for (int i = 0; i < bd.cardIDs.Length; i++)
+        if(File.Exists(filePath))
         {
-            cds.Add(bd.cardIDs[i], bd.resolvedIndices[i] > 0);
-        }
+            var boardData = System.IO.File.ReadAllText(filePath);
+            bd = JsonUtility.FromJson<BoardData>(boardData);
+            Debug.Log(boardData);
 
-        return cds;
+            List<string> cds = new List<string>();
+            List<int> idx = new List<int>();
+
+            for (int i = 0; i < bd.cardIDs.Length; i++)
+            {
+                cds.Add(bd.cardIDs[i]);
+                idx.Add(bd.resolvedIndices[i]);
+            }
+
+            return Tuple.Create(cds, idx);
+        }
+        else
+            return null;
     }
 
     internal void SaveToJson(CardController[] cardsC)
     {
         BoardData bd = new BoardData();
-        bd.score = 10;
-        bd.moves = 25;
         bd.cardIDs = new string[cardsC.Length];
         bd.resolvedIndices = new int[cardsC.Length];
         
@@ -54,7 +61,7 @@ public class PlayerDataManager : MonoBehaviour
         {
             bd.cardIDs[i] = cardsC[i].GetCard().contentID;
             if(cardsC[i].IsMatched)
-                bd.resolvedIndices[i] = i;  
+                bd.resolvedIndices[i] = 1;  
         }
 
         var bdx = JsonUtility.ToJson(bd);

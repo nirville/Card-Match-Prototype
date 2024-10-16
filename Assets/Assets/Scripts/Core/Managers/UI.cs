@@ -17,6 +17,7 @@ public class UI : MonoBehaviour
 
     [SerializeField] TMP_Text score;
     [SerializeField] TMP_Text moves;
+    [SerializeField] TMP_Text play;
 
     [SerializeField] Button _2x2;
     [SerializeField] Button _2x3;
@@ -24,6 +25,7 @@ public class UI : MonoBehaviour
     [SerializeField] Button _5x6;
 
     public Button NextButton => nextBtn;
+    public void PlayText(string str) => play.text = str.ToString();
 
     private void Awake() 
     {

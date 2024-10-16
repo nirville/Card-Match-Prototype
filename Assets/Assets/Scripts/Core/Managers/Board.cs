@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 
 namespace Nirville.Core
@@ -18,7 +19,11 @@ namespace Nirville.Core
         List<int> _availablePositionIndexes;
     	List<CardController> _cardControllers;
 
+        Tuple<List<string>, List<int>> cardsSaved;
+
         Vector2Int _gridSize = new Vector2Int(2,3);
+
+        bool _isSavedBoardAvailable;
 
         private void OnEnable() {
             GameEvents.current.BoardSizeSelect += OnGridSelection;
@@ -41,17 +46,72 @@ namespace Nirville.Core
             PlayerDataManager.Instance.SaveToJson(_cardControllers.ToArray());
         }
 
-        private void Start() {
+        private void Start() 
+        {
             OnGridSelection(_gridSize); // default size
+            cardsSaved = PlayerDataManager.Instance.LoadJsonData();
+
+            if(cardsSaved != null)
+            {
+                GameManager.Instance.ui.PlayText("resume");
+                _isSavedBoardAvailable = true;
+            }
         }
 
         private void OnGameStart()
         {
+            if(_isSavedBoardAvailable)
+            {
+                LoadPreviousLevel();
+            }
+            else
+            {
+                _cardControllers = new List<CardController>();
+
+                GenerateAvailableImageIndexes();
+                GenerateAvailablePositionIndexes(_cardCount);
+                GenerateCards();
+            }
+        }
+
+        private void LoadPreviousLevel()
+        {
+            var cardStrings = new List<string>();
+            var cardIndices = new List<int>();
+
+            cardStrings = cardsSaved.Item1;
+            cardIndices = cardsSaved.Item2;
+
+
+            var cardCountingInSaveGame = cardStrings.Count;
+
+            switch (cardCountingInSaveGame)
+            {
+                default:
+                    SetGridLayouParams(2, 3);
+                break;
+            }
+
+            _availableImageIndexes = null;
+            _availablePositionIndexes = null;
+            _cardControllers = null;
+
             _cardControllers = new List<CardController>();
 
-            GenerateAvailableImageIndexes();
-            GenerateAvailablePositionIndexes(_cardCount);
-            GenerateCards();
+            for (int i = 0; i < cardStrings.Count; i++)
+            {
+                var card = Instantiate(cardPrefab, gridParent.transform);
+                card.transform.name = "Card " + i.ToString();
+                _cardControllers.Add(card.GetComponent<CardController>());
+            }
+
+            for(int i = 0; i < cardIndices.Count; i++)
+            {
+                var matching = GetCardMatch(cardStrings[i]);
+                _cardControllers[i].SetCard(matching);
+                if(cardIndices[i] > 0)
+                    _cardControllers[i].DisableCard();
+            }
         }
 
         private void OnNextLevel()
@@ -125,7 +185,7 @@ namespace Nirville.Core
 
         public Card GetRandomAvailableCard()
         {
-            var random = Random.Range(0, _availableImageIndexes.Count);
+            var random = UnityEngine.Random.Range(0, _availableImageIndexes.Count);
             var randomIndex = _availableImageIndexes[random];
 
             _availableImageIndexes.RemoveAt(random);
@@ -135,7 +195,7 @@ namespace Nirville.Core
 
         public int GetRandomCardPositionIndex()
         {
-            int randomIndex = Random.Range(0, _availablePositionIndexes.Count);
+            int randomIndex = UnityEngine.Random.Range(0, _availablePositionIndexes.Count);
             int randomPosition = _availablePositionIndexes[randomIndex];
 
             _availablePositionIndexes.RemoveAt(randomIndex);
