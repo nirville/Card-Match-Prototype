@@ -23,6 +23,8 @@ public class UI : MonoBehaviour
     [SerializeField] Button _4x4;
     [SerializeField] Button _5x6;
 
+    public Button NextButton => nextBtn;
+
     private void Awake() 
     {
         playBtn.onClick.AddListener(()=>
@@ -51,6 +53,13 @@ public class UI : MonoBehaviour
             GameEvents.current.EndGameplay();
         }
        );
+
+       nextBtn.interactable = false;
+        nextBtn.onClick.AddListener(() =>
+        {
+            GameEvents.current.StartNextLevel();
+        }
+       );
     }
 
     void SwitchToCanvas(Canvas canvas)
@@ -60,4 +69,7 @@ public class UI : MonoBehaviour
 
         canvas.gameObject.SetActive(true);
     }
+
+    internal void SetScore(int val) => score.text = val.ToString();
+    internal void SetMoves(int val) => moves.text = val.ToString();
 }

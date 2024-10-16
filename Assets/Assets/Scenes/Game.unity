@@ -840,6 +840,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isLogMessages: 1
+  ui: {fileID: 1110575217}
 --- !u!4 &350411178
 Transform:
   m_ObjectHideFlags: 0
@@ -2467,7 +2468,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Score - 999
+  m_text: Score - 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8cba7ceee1c744b4ba1c7a6a1f426c36, type: 2}
   m_sharedMaterial: {fileID: -2302849365362884220, guid: 8cba7ceee1c744b4ba1c7a6a1f426c36, type: 2}
@@ -3025,7 +3026,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Moves - 999
+  m_text: Moves - 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8cba7ceee1c744b4ba1c7a6a1f426c36, type: 2}
   m_sharedMaterial: {fileID: -2302849365362884220, guid: 8cba7ceee1c744b4ba1c7a6a1f426c36, type: 2}

@@ -18,45 +18,65 @@ namespace Nirville.Core
         List<int> _availablePositionIndexes;
     	List<CardController> _cardControllers;
 
+        Vector2Int _gridSize = new Vector2Int(2,3);
+
         private void OnEnable() {
             GameEvents.current.BoardSizeSelect += OnGridSelection;
             GameEvents.current.GameStart += OnGameStart;
             GameEvents.current.GameEnd += OnGameEnd;
+            GameEvents.current.NextLevel += OnNextLevel;
         }
 
         void OnDisable()
         {
             GameEvents.current.BoardSizeSelect -= OnGridSelection;
-            GameEvents.current.GameStart += OnGameStart;
-            GameEvents.current.GameEnd += OnGameEnd;
+            GameEvents.current.GameStart -= OnGameStart;
+            GameEvents.current.GameEnd -= OnGameEnd;
+            GameEvents.current.NextLevel -= OnNextLevel;
         }
 
         private void Awake() {
         }
 
         private void Start() {
-            _cardControllers = new List<CardController>();
-            OnGridSelection(new Vector2Int(2, 3)); // default size
+            OnGridSelection(_gridSize); // default size
         }
 
         private void OnGameStart()
         {
-            GenerateCards();
+            _cardControllers = new List<CardController>();
+
             GenerateAvailableImageIndexes();
             GenerateAvailablePositionIndexes(_cardCount);
+            GenerateCards();
+        }
+
+        private void OnNextLevel()
+        {
+            foreach (var go in _cardControllers) Destroy(go.gameObject);
+            _availableImageIndexes = null;
+            _availablePositionIndexes = null;
+            _cardControllers = null;
+
+            _cardControllers = new List<CardController>();
+
+            GenerateAvailableImageIndexes();
+            GenerateAvailablePositionIndexes(_cardCount);
+            GenerateCards();
         }
 
         private void OnGameEnd()
         {
             _cardCount = 0;
-            var cards = GetComponentsInChildren<CardController>();
-            foreach(var go in cards) Destroy(go.gameObject);
+            foreach(var go in _cardControllers) Destroy(go.gameObject);
             _availableImageIndexes = null;
             _availablePositionIndexes = null;
+            _cardControllers = null;
         }
 
         void OnGridSelection(Vector2Int size)
         {
+            _gridSize = size;
             gridlayoutWidget.rows = size.x;
             gridlayoutWidget.columns = size.y;
             SetGridLayouParams(size.x, size.y);

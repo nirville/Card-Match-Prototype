@@ -30,6 +30,40 @@ namespace Nirville.Core
         {
             _game = GameManager.Instance;
             _button.onClick.AddListener(() => OnCardInteraction());
+            StartCoroutine(FullFlip());
+        }
+
+        private IEnumerator FullFlip()
+        {
+            _button.enabled = false;
+            while (transform.localScale.x > -1f)
+            {
+                cardScale = cardScale - (flipSpeed * Time.deltaTime);
+                ChangeScale(cardScale);
+                if (flipTolerance > cardScale)
+                {
+                    backFace.gameObject.SetActive(true);
+                    frontFace.gameObject.SetActive(false);
+                }
+                yield return null;
+            }
+            ChangeScale(-1.0f);
+
+            yield return new WaitForSeconds (1.5f);
+
+            while (transform.localScale.x < 1f)
+            {
+                cardScale = cardScale + (flipSpeed * Time.deltaTime);
+                ChangeScale(cardScale);
+                if (flipTolerance > cardScale)
+                {
+                    backFace.gameObject.SetActive(false);
+                    frontFace.gameObject.SetActive(true);
+                }
+                yield return null;
+            }
+            ChangeScale(1.0f);
+            _button.enabled = true;
         }
 
         void OnCardInteraction()

@@ -8,10 +8,18 @@ namespace Nirville.Core
 
         public string LastContentRevealed { get; set; }
         public string LastClickedCardID {get; set;}
+        public bool IsLevelCleared
+        {
+            get
+            {
+               return (score == BoardGridSize.x * BoardGridSize.y / 2);
+            }
+        }
 
         public Vector2Int BoardGridSize { get; set;}
 
         public bool isLogMessages;
+        public UI ui;
 
         internal GameObject[] selectedCards;
 
@@ -45,7 +53,6 @@ namespace Nirville.Core
             }
             else if(selectedCards[1] == null)
             {
-                movesCount++;
 
                 selectedCards[1] = selection;
                 if(MatchSelectedCards())
@@ -56,10 +63,15 @@ namespace Nirville.Core
                 }
                 else
                 {
+                    movesCount++;
                     ResetSelectedCards();
                     DiscardSelection();
                 }
             }
+            ui.SetMoves(movesCount);
+            ui.SetScore(score);
+            if(IsLevelCleared)
+                ui.NextButton.interactable = true;
         }
 
         void DiscardSelection()

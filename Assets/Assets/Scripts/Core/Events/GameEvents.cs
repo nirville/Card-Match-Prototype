@@ -10,10 +10,12 @@ namespace Nirville.Core
         void Awake() => current = this;
         public event Action<Vector2Int> BoardSizeSelect;
         public event Action GameStart;
+        public event Action NextLevel;
         public event Action GameEnd;
 
         public void SetBoardSize(Vector2Int size) => BoardSizeSelect?.Invoke(size);
         public void StartGameplay() => GameStart?.Invoke();
+        public void StartNextLevel() => NextLevel?.Invoke();
         public void EndGameplay() => GameEnd?.Invoke();
     }
 }
