@@ -10,6 +10,7 @@ namespace Nirville.Core
         [SerializeField] GameObject gridParent;
         [SerializeField] GameObject cardPrefab;
         [SerializeField] CardCollection cardCollection;
+        [SerializeField] FlexibleGridLayout gridlayoutWidget;
 
         int _cardCount;
 
@@ -17,22 +18,54 @@ namespace Nirville.Core
         List<int> _availablePositionIndexes;
     	List<CardController> _cardControllers;
 
+        private void OnEnable() {
+            GameEvents.current.BoardSizeSelect += OnGridSelection;
+            GameEvents.current.GameStart += OnGameStart;
+            GameEvents.current.GameEnd += OnGameEnd;
+        }
+
+        void OnDisable()
+        {
+            GameEvents.current.BoardSizeSelect -= OnGridSelection;
+            GameEvents.current.GameStart += OnGameStart;
+            GameEvents.current.GameEnd += OnGameEnd;
+        }
+
         private void Awake() {
         }
 
-        void Start()
-        {
+        private void Start() {
             _cardControllers = new List<CardController>();
-            SetGridLayouParams();
-            GenerateCards();
+            OnGridSelection(new Vector2Int(2, 3)); // default size
         }
 
-        void SetGridLayouParams()
+        private void OnGameStart()
         {
-            GameManager.Instance.BoardGridSize = new Vector2Int(2, 3);
-            _cardCount = GameManager.Instance.BoardGridSize.x * GameManager.Instance.BoardGridSize.y;
+            GenerateCards();
             GenerateAvailableImageIndexes();
             GenerateAvailablePositionIndexes(_cardCount);
+        }
+
+        private void OnGameEnd()
+        {
+            _cardCount = 0;
+            var cards = GetComponentsInChildren<CardController>();
+            foreach(var go in cards) Destroy(go.gameObject);
+            _availableImageIndexes = null;
+            _availablePositionIndexes = null;
+        }
+
+        void OnGridSelection(Vector2Int size)
+        {
+            gridlayoutWidget.rows = size.x;
+            gridlayoutWidget.columns = size.y;
+            SetGridLayouParams(size.x, size.y);
+        }
+
+        void SetGridLayouParams(int row, int column)
+        {
+            GameManager.Instance.BoardGridSize = new Vector2Int(row, column);
+            _cardCount = GameManager.Instance.BoardGridSize.x * GameManager.Instance.BoardGridSize.y;
         }
         
         void GenerateCards()

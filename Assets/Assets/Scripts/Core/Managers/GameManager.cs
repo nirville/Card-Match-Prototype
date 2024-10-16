@@ -38,7 +38,6 @@ namespace Nirville.Core
 
         internal void SetSelectedCard(GameObject selection)
         {
-            movesCount++;
 
             if(selectedCards[0] == null)
             {
@@ -46,6 +45,8 @@ namespace Nirville.Core
             }
             else if(selectedCards[1] == null)
             {
+                movesCount++;
+
                 selectedCards[1] = selection;
                 if(MatchSelectedCards())
                 {
